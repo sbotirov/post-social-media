@@ -5,6 +5,8 @@ import { getPostHistory, deletePost } from '@/app/actions/posts'
 import { getChannels } from '@/app/actions/channels'
 import { format } from 'date-fns'
 import { useTranslations } from 'next-intl'
+import Link from 'next/link'
+import ConfirmModal from '@/components/ui/ConfirmModal'
 
 const statusColors: Record<string, string> = {
   SENT: 'status-sent',
@@ -27,6 +29,7 @@ export default function HistoryPage() {
   const [channelId, setChannelId] = useState('')
   const [status, setStatus] = useState('')
   const [type, setType] = useState('')
+  const [confirmModal, setConfirmModal] = useState<{ isOpen: boolean, postId: string }>({ isOpen: false, postId: '' })
 
   useEffect(() => {
     getChannels().then(setChannels)
@@ -53,9 +56,14 @@ export default function HistoryPage() {
     setLoading(false)
   }
 
-  async function handleDelete(id: string) {
-    if (!confirm(t('ConfirmDelete'))) return
-    await deletePost(id)
+  function requestDelete(id: string) {
+    setConfirmModal({ isOpen: true, postId: id })
+  }
+
+  async function handleDelete() {
+    if (!confirmModal.postId) return
+    await deletePost(confirmModal.postId)
+    setConfirmModal({ isOpen: false, postId: '' })
     loadPosts()
   }
 
@@ -142,8 +150,13 @@ export default function HistoryPage() {
                     <td className="px-4 py-3 text-xs" style={{ color: 'hsl(215 15% 55%)' }}>
                       {format(new Date(post.createdAt), 'MMM d, yyyy HH:mm')}
                     </td>
-                    <td className="px-4 py-3 text-right">
-                      <button onClick={() => handleDelete(post.id)} className="text-xs hover:opacity-70" style={{ color: 'hsl(0 72% 60%)' }}>
+                    <td className="px-4 py-3 text-right flex items-center justify-end gap-3">
+                      {post.status === 'DRAFT' && (
+                        <Link href={`../dashboard/compose?draftId=${post.id}`} className="text-xs hover:opacity-70 transition-opacity" style={{ color: 'hsl(250 85% 65%)' }}>
+                          {t('EditDraft')}
+                        </Link>
+                      )}
+                      <button onClick={() => requestDelete(post.id)} className="text-xs hover:opacity-70" style={{ color: 'hsl(0 72% 60%)' }}>
                         {t('Delete')}
                       </button>
                     </td>
@@ -175,6 +188,15 @@ export default function HistoryPage() {
           </div>
         )}
       </div>
+
+      <ConfirmModal
+        isOpen={confirmModal.isOpen}
+        message={t('ConfirmDelete')}
+        onCancel={() => setConfirmModal({ isOpen: false, postId: '' })}
+        onConfirm={handleDelete}
+        confirmText={t('Confirm')}
+        cancelText={t('Cancel')}
+      />
     </div>
   )
 }

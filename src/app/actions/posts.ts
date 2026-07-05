@@ -7,6 +7,14 @@ import { revalidatePath } from 'next/cache'
 import type { CreatePostInput, PostFilter, DashboardStats } from '@/types'
 
 export async function createPost(data: CreatePostInput) {
+  if (data.draftId) {
+    try {
+      await prisma.post.delete({ where: { id: data.draftId } })
+    } catch (e) {
+      // Ignore if draft doesn't exist
+    }
+  }
+
   const post = await prisma.post.create({
     data: {
       type: data.type,

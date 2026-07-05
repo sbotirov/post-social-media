@@ -4,10 +4,12 @@ import { useState, useEffect, useTransition } from 'react'
 import { getScheduledPosts, cancelScheduledPost } from '@/app/actions/posts'
 import { format } from 'date-fns'
 import { useTranslations } from 'next-intl'
+import ConfirmModal from '@/components/ui/ConfirmModal'
 
 export default function ScheduledPage() {
   const [posts, setPosts] = useState<any[]>([])
   const [isPending, startTransition] = useTransition()
+  const [confirmModal, setConfirmModal] = useState<{ isOpen: boolean, postId: string }>({ isOpen: false, postId: '' })
   const t = useTranslations('Scheduled')
 
   useEffect(() => {
@@ -19,10 +21,15 @@ export default function ScheduledPage() {
     setPosts(data)
   }
 
-  function handleCancel(postId: string) {
-    if (!confirm(t('ConfirmCancel'))) return
+  function requestCancel(postId: string) {
+    setConfirmModal({ isOpen: true, postId })
+  }
+
+  function handleCancel() {
+    if (!confirmModal.postId) return
     startTransition(async () => {
-      await cancelScheduledPost(postId)
+      await cancelScheduledPost(confirmModal.postId)
+      setConfirmModal({ isOpen: false, postId: '' })
       await loadPosts()
     })
   }
@@ -71,7 +78,7 @@ export default function ScheduledPage() {
                   </div>
                   
                   <button
-                    onClick={() => handleCancel(post.id)}
+                    onClick={() => requestCancel(post.id)}
                     disabled={isPending}
                     className="text-xs px-3 py-1.5 rounded-lg ml-2 shrink-0 transition-colors hover:bg-white/10"
                     style={{ color: 'hsl(0 72% 60%)', border: '1px solid hsl(0 72% 60% / 0.3)' }}
@@ -84,6 +91,15 @@ export default function ScheduledPage() {
           ))}
         </div>
       )}
+
+      <ConfirmModal
+        isOpen={confirmModal.isOpen}
+        message={t('ConfirmCancel')}
+        onCancel={() => setConfirmModal({ isOpen: false, postId: '' })}
+        onConfirm={handleCancel}
+        confirmText={t('Confirm')}
+        cancelText={t('Cancel')}
+      />
     </div>
   )
 }

@@ -46,7 +46,10 @@
     "ConfirmDelete": "Ushbu xabar yozuvini o'chirishga ishonchingiz komilmi?",
     "Previous": "Oldingi",
     "Next": "Keyingi",
-    "PageInfo": "Sahifa {page} / {total}"
+    "PageInfo": "Sahifa {page} / {total}",
+    "Cancel": "Bekor qilish",
+    "Confirm": "Tasdiqlash",
+    "EditDraft": "Tahrirlash"
   },
   "Scheduled": {
     "Title": "Rejalashtirilgan xabarlar",
@@ -55,7 +58,8 @@
     "NoPostsDesc": "Kelajakdagi rejalashtirilgan xabarlaringiz bu yerda ko'rinadi",
     "ConfirmCancel": "Ushbu rejalashtirilgan xabarni bekor qilasizmi? U qoralama sifatida saqlanadi.",
     "MediaPost": "Media xabar",
-    "Cancel": "Bekor qilish"
+    "Cancel": "Bekor qilish",
+    "Confirm": "Tasdiqlash"
   },
   "Settings": {
     "Title": "Sozlamalar",
@@ -144,7 +148,16 @@
     "ScheduleTitle": "Rejalashtirish",
     "PostsIn": "{hours}s {mins}d dan keyin yuboriladi",
     "TimePassed": "Vaqt o'tib ketgan",
-    "Hashtags": "Heshteglar"
+    "Hashtags": "Heshteglar",
+    "HashtagsPlaceholder": "Heshtegni kiriting va Enter ni bosing",
+    "InlineKeyboard": "Tugmalar (Inline Keyboard)",
+    "Row": "Qator {row}",
+    "RemoveRow": "Qatorni o'chirish",
+    "ButtonTextPlaceholder": "Tugma matni",
+    "AddButton": "+ Tugma qo'shish",
+    "AddRow": "+ Qator qo'shish",
+    "PreviewLabel": "Oldindan ko'rish:",
+    "ButtonPlaceholder": "Tugma"
   },
   "Dashboard": {
     "TotalSubscribers": "Jami obunachilar",

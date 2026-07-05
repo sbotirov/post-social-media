@@ -71,6 +71,7 @@ export interface CreatePostInput {
   ttsLanguage?: string
   ttsAudioPath?: string
   scheduledAt?: string | null
+  draftId?: string
 }
 
 export interface SendResult {

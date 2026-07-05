@@ -8,7 +8,10 @@ interface Props {
   onKeyboardChange: (kb: InlineKeyboard) => void
 }
 
+import { useTranslations } from 'next-intl'
+
 export default function InlineKeyboardBuilder({ keyboard, onKeyboardChange }: Props) {
+  const t = useTranslations('Compose')
   const [expanded, setExpanded] = useState(false)
 
   function addRow() {
@@ -42,7 +45,7 @@ export default function InlineKeyboardBuilder({ keyboard, onKeyboardChange }: Pr
   return (
     <div className="glass rounded-2xl overflow-hidden">
       <button onClick={() => setExpanded(!expanded)} className="w-full p-5 flex items-center justify-between text-sm font-semibold hover:bg-white/5 transition-colors">
-        <span className="flex items-center gap-2">⌨️ Inline Keyboard</span>
+        <span className="flex items-center gap-2">⌨️ {t('InlineKeyboard')}</span>
         <span className="text-lg transition-transform" style={{ transform: expanded ? 'rotate(180deg)' : '' }}>▾</span>
       </button>
 
@@ -51,33 +54,33 @@ export default function InlineKeyboardBuilder({ keyboard, onKeyboardChange }: Pr
           {keyboard.map((row, ri) => (
             <div key={ri} className="p-3 rounded-xl space-y-2" style={{ background: 'hsl(224 20% 14%)' }}>
               <div className="flex items-center justify-between">
-                <span className="text-xs" style={{ color: 'hsl(215 15% 55%)' }}>Row {ri + 1}</span>
-                <button onClick={() => removeRow(ri)} className="text-xs hover:opacity-70" style={{ color: 'hsl(0 72% 60%)' }}>Remove Row</button>
+                <span className="text-xs" style={{ color: 'hsl(215 15% 55%)' }}>{t('Row', { row: ri + 1 })}</span>
+                <button onClick={() => removeRow(ri)} className="text-xs hover:opacity-70" style={{ color: 'hsl(0 72% 60%)' }}>{t('RemoveRow')}</button>
               </div>
               {row.map((btn, bi) => (
                 <div key={bi} className="flex gap-2 items-center">
-                  <input value={btn.text} onChange={(e) => updateButton(ri, bi, 'text', e.target.value)} placeholder="Button text" className="flex-1" />
+                  <input value={btn.text} onChange={(e) => updateButton(ri, bi, 'text', e.target.value)} placeholder={t('ButtonTextPlaceholder')} className="flex-1" />
                   <input value={btn.url} onChange={(e) => updateButton(ri, bi, 'url', e.target.value)} placeholder="https://..." className="flex-1" />
                   <button onClick={() => removeButton(ri, bi)} className="text-xs px-1 hover:opacity-70" style={{ color: 'hsl(0 72% 60%)' }}>✕</button>
                 </div>
               ))}
-              <button onClick={() => addButtonToRow(ri)} className="text-xs px-3 py-1 rounded-lg hover:bg-white/10" style={{ color: 'hsl(250 85% 65%)' }}>+ Button</button>
+              <button onClick={() => addButtonToRow(ri)} className="text-xs px-3 py-1 rounded-lg hover:bg-white/10" style={{ color: 'hsl(250 85% 65%)' }}>{t('AddButton')}</button>
             </div>
           ))}
 
           <button onClick={addRow} className="w-full py-2 rounded-xl text-sm hover:bg-white/10 transition-colors" style={{ border: '1px dashed hsl(224 15% 20%)', color: 'hsl(215 15% 55%)' }}>
-            + Add Row
+            {t('AddRow')}
           </button>
 
           {/* Preview */}
           {keyboard.length > 0 && (
             <div className="mt-3 space-y-1">
-              <p className="text-xs mb-2" style={{ color: 'hsl(215 15% 55%)' }}>Preview:</p>
+              <p className="text-xs mb-2" style={{ color: 'hsl(215 15% 55%)' }}>{t('PreviewLabel')}</p>
               {keyboard.map((row, ri) => (
                 <div key={ri} className="flex gap-1">
                   {row.map((btn, bi) => (
                     <span key={bi} className="flex-1 text-center py-1.5 rounded-lg text-xs font-medium truncate" style={{ background: 'hsl(210 85% 55% / 0.2)', color: 'hsl(210 85% 55%)' }}>
-                      {btn.text || 'Button'}
+                      {btn.text || t('ButtonPlaceholder')}
                     </span>
                   ))}
                 </div>

@@ -16,20 +16,40 @@ import PostOptions_ from './PostOptions'
 import PostPreview from './PostPreview'
 import { useTranslations } from 'next-intl'
 
-export default function PostComposer() {
+interface Props {
+  draft?: any
+}
+
+export default function PostComposer({ draft }: Props) {
   const [channels, setChannels] = useState<ChannelInfo[]>([])
-  const [selectedChannels, setSelectedChannels] = useState<string[]>([])
-  const [text, setText] = useState('')
-  const [parseMode, setParseMode] = useState<'HTML' | 'MarkdownV2'>('HTML')
-  const [mediaFiles, setMediaFiles] = useState<MediaFileInput[]>([])
-  const [ttsAudioPath, setTtsAudioPath] = useState<string | null>(null)
-  const [ttsText, setTtsText] = useState('')
-  const [ttsLanguage, setTtsLanguage] = useState('uz-UZ') // Default to Uzbek as requested
-  const [pollEnabled, setPollEnabled] = useState(false)
-  const [poll, setPoll] = useState<PollInput>({ question: '', options: ['', ''], isAnonymous: true, type: 'regular', multiAnswer: false })
-  const [keyboard, setKeyboard] = useState<InlineKeyboard>([])
-  const [hashtags, setHashtags] = useState<string[]>([])
-  const [options, setOptions] = useState<PostOptions>({ disableComments: false, disableNotification: false, protectContent: false, pinMessage: false })
+  const [selectedChannels, setSelectedChannels] = useState<string[]>(draft?.channels?.map((c: any) => c.channelId) || [])
+  const [text, setText] = useState(() => {
+    if (!draft?.text) return ''
+    if (draft.hashtags) {
+      const hashtagStr = draft.hashtags.split(',').map((h: string) => `#${h}`).join(' ')
+      return draft.text.replace('\n\n' + hashtagStr, '')
+    }
+    return draft.text
+  })
+  const [parseMode, setParseMode] = useState<'HTML' | 'MarkdownV2'>(draft?.parseMode || 'HTML')
+  const [mediaFiles, setMediaFiles] = useState<MediaFileInput[]>(draft?.mediaFiles || [])
+  const [ttsAudioPath, setTtsAudioPath] = useState<string | null>(draft?.ttsAudioPath || null)
+  const [ttsText, setTtsText] = useState(draft?.ttsText || '')
+  const [ttsLanguage, setTtsLanguage] = useState(draft?.ttsLanguage || 'uz-UZ') // Default to Uzbek as requested
+  const [pollEnabled, setPollEnabled] = useState(!!draft?.poll)
+  const [poll, setPoll] = useState<PollInput>(
+    draft?.poll
+      ? { ...draft.poll, options: typeof draft.poll.options === 'string' ? JSON.parse(draft.poll.options) : draft.poll.options }
+      : { question: '', options: ['', ''], isAnonymous: true, type: 'regular', multiAnswer: false }
+  )
+  const [keyboard, setKeyboard] = useState<InlineKeyboard>(draft?.inlineKeyboard ? JSON.parse(draft.inlineKeyboard) : [])
+  const [hashtags, setHashtags] = useState<string[]>(draft?.hashtags ? draft.hashtags.split(',') : [])
+  const [options, setOptions] = useState<PostOptions>({
+    disableComments: draft?.disableComments || false,
+    disableNotification: draft?.disableNotification || false,
+    protectContent: draft?.protectContent || false,
+    pinMessage: draft?.pinMessage || false,
+  })
   const [scheduleMode, setScheduleMode] = useState<'now' | 'schedule'>('now')
   const [scheduledAt, setScheduledAt] = useState('')
   const [isPending, startTransition] = useTransition()
@@ -86,6 +106,7 @@ export default function PostComposer() {
           ttsLanguage: ttsLanguage || undefined,
           ttsAudioPath: ttsAudioPath || undefined,
           scheduledAt: action === 'schedule' ? new Date(scheduledAt).toISOString() : null,
+          draftId: draft?.id,
         }
 
         const post = await createPost(postData)
