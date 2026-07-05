@@ -3,6 +3,7 @@
 import { useState, useRef } from 'react'
 
 const languages = [
+  { code: 'uz', name: 'Oʻzbekcha', flag: '🇺🇿' },
   { code: 'ru', name: 'Русский', flag: '🇷🇺' },
   { code: 'en', name: 'English', flag: '🇬🇧' },
   { code: 'ko', name: '한국어', flag: '🇰🇷' },
