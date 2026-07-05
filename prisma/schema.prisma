@@ -1,0 +1,93 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+}
+
+model Channel {
+  id          String        @id @default(cuid())
+  chatId      String        @unique
+  title       String
+  description String?
+  username    String?
+  memberCount Int?
+  photoUrl    String?
+  isActive    Boolean       @default(true)
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt
+  posts       PostChannel[]
+}
+
+model Post {
+  id                  String        @id @default(cuid())
+  type                String        @default("TEXT")
+  text                String?
+  parseMode           String        @default("HTML")
+  inlineKeyboard      String?
+  hashtags            String?
+  disableComments     Boolean       @default(false)
+  protectContent      Boolean       @default(false)
+  disableNotification Boolean       @default(false)
+  pinMessage          Boolean       @default(false)
+  status              String        @default("DRAFT")
+  scheduledAt         DateTime?
+  sentAt              DateTime?
+  telegramMsgIds      String?
+  errorMessage        String?
+  ttsText             String?
+  ttsLanguage         String?
+  ttsAudioPath        String?
+  createdAt           DateTime      @default(now())
+  updatedAt           DateTime      @updatedAt
+  channels            PostChannel[]
+  mediaFiles          MediaFile[]
+  poll                Poll?
+}
+
+model PostChannel {
+  id        String  @id @default(cuid())
+  postId    String
+  channelId String
+  post      Post    @relation(fields: [postId], references: [id], onDelete: Cascade)
+  channel   Channel @relation(fields: [channelId], references: [id], onDelete: Cascade)
+
+  @@unique([postId, channelId])
+}
+
+model MediaFile {
+  id        String   @id @default(cuid())
+  type      String
+  filePath  String
+  fileName  String
+  fileSize  Int
+  mimeType  String
+  caption   String?
+  sortOrder Int      @default(0)
+  postId    String
+  post      Post     @relation(fields: [postId], references: [id], onDelete: Cascade)
+  createdAt DateTime @default(now())
+}
+
+model Poll {
+  id            String  @id @default(cuid())
+  question      String
+  options       String
+  isAnonymous   Boolean @default(true)
+  type          String  @default("regular")
+  correctOption Int?
+  explanation   String?
+  multiAnswer   Boolean @default(false)
+  postId        String  @unique
+  post          Post    @relation(fields: [postId], references: [id], onDelete: Cascade)
+}
+
+model AuditLog {
+  id        String   @id @default(cuid())
+  action    String
+  details   String?
+  ip        String?
+  userAgent String?
+  createdAt DateTime @default(now())
+}

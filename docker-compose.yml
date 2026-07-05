@@ -1,0 +1,23 @@
+version: '3.8'
+
+services:
+  telepost:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: telepost_app
+    restart: unless-stopped
+    ports:
+      - "3001:3000"
+    volumes:
+      - telepost_data:/app/data
+      - telepost_uploads:/app/public/uploads
+    env_file:
+      - .env
+    environment:
+      - NODE_ENV=production
+      - DATABASE_URL=file:/app/data/dev.db
+
+volumes:
+  telepost_data:
+  telepost_uploads:
