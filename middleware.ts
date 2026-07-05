@@ -1,5 +1,9 @@
 import { NextResponse } from 'next/server'
 import type { NextRequest } from 'next/server'
+import createMiddleware from 'next-intl/middleware';
+import { routing } from './src/i18n/routing';
+
+const intlMiddleware = createMiddleware(routing);
 
 export function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl
@@ -7,22 +11,16 @@ export function middleware(request: NextRequest) {
   // Skip for static files, auth routes, and public assets
   if (
     pathname.startsWith('/_next') ||
-    pathname.startsWith('/api/auth') ||
-    pathname.startsWith('/api/cron') ||
+    pathname.startsWith('/api') ||
     pathname === '/favicon.ico' ||
     pathname.startsWith('/uploads')
   ) {
+    // Basic auth check for API routes if needed, but we do it inside the API
     return NextResponse.next()
   }
 
-  // Add request ID header
-  const requestId = crypto.randomUUID()
-  const requestHeaders = new Headers(request.headers)
-  requestHeaders.set('x-request-id', requestId)
-
-  // Check for auth on dashboard and API routes
-  const isProtectedRoute = pathname.startsWith('/dashboard') || 
-    (pathname.startsWith('/api') && !pathname.startsWith('/api/auth'))
+  // Check for auth on dashboard
+  const isProtectedRoute = pathname.includes('/dashboard')
 
   if (isProtectedRoute) {
     const token =
@@ -35,20 +33,19 @@ export function middleware(request: NextRequest) {
     }
   }
 
-  // Redirect root to dashboard
-  if (pathname === '/') {
-    return NextResponse.redirect(new URL('/dashboard', request.url))
-  }
-
-  const response = NextResponse.next({
-    request: { headers: requestHeaders },
-  })
-
+  // Redirect root to dashboard (intl middleware will handle the locale)
+  // Wait, intl middleware will just render / with the locale. Let's let it redirect?
+  // Actually, we can just let intlMiddleware handle it, and in src/app/[locale]/page.tsx we redirect to /dashboard.
+  
+  // Call the intl middleware
+  const response = intlMiddleware(request);
+  
+  const requestId = crypto.randomUUID()
   response.headers.set('x-request-id', requestId)
 
   return response
 }
 
 export const config = {
-  matcher: ['/((?!_next/static|_next/image|favicon.ico|uploads).*)'],
+  matcher: ['/', '/(uz|en)/:path*', '/((?!api|_vercel|_next|.*\\..*).*)']
 }

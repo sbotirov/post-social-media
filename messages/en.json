@@ -1,0 +1,57 @@
+{
+  "Sidebar": {
+    "Overview": "Overview",
+    "Compose": "Compose",
+    "Channels": "Channels",
+    "Scheduled": "Scheduled",
+    "History": "History",
+    "Settings": "Settings"
+  },
+  "Topbar": {
+    "Search": "Search...",
+    "SignOut": "Sign Out"
+  },
+  "Compose": {
+    "Title": "Compose Post",
+    "TextTab": "Text",
+    "MediaTab": "Media",
+    "PollTab": "Poll",
+    "VoiceTab": "Voice",
+    "MessagePlaceholder": "Write your post here... Use Telegram formatting (e.g., **bold**, __italic__)",
+    "HashtagsPlaceholder": "Add hashtags (press Enter)",
+    "SchedulePost": "Schedule Post",
+    "SendNow": "Send Now",
+    "Sending": "Sending...",
+    "SelectChannel": "Select a channel",
+    "NoChannels": "No channels found. Add one in settings.",
+    "PollQuestion": "Poll Question",
+    "PollOptions": "Poll Options",
+    "AddOption": "Add Option",
+    "AnonymousVoting": "Anonymous Voting",
+    "MultipleAnswers": "Multiple Answers",
+    "QuizMode": "Quiz Mode",
+    "VoiceText": "Text to read",
+    "GenerateVoice": "Generate Voice",
+    "SelectLanguage": "Select language",
+    "MediaUploadLimit": "Max 50MB per file",
+    "UploadMedia": "Upload media"
+  },
+  "Dashboard": {
+    "TotalSubscribers": "Total Subscribers",
+    "ActiveChannels": "Active Channels",
+    "PostsThisWeek": "Posts This Week",
+    "RecentActivity": "Recent Activity",
+    "QuickActions": "Quick Actions",
+    "NewPost": "New Post",
+    "AddChannel": "Add Channel",
+    "ViewHistory": "View History",
+    "NoPostsYet": "No posts yet. Start composing!"
+  },
+  "Settings": {
+    "Title": "Settings",
+    "BotToken": "Bot Token",
+    "BotTokenPlaceholder": "123456789:ABCdefGHIjklMNOpqrsTUVwxyz",
+    "Save": "Save Changes",
+    "Saving": "Saving..."
+  }
+}

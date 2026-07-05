@@ -1,0 +1,57 @@
+{
+  "Sidebar": {
+    "Overview": "Umumiy ko'rinish",
+    "Compose": "Xabar yozish",
+    "Channels": "Kanallar",
+    "Scheduled": "Rejalashtirilgan",
+    "History": "Tarix",
+    "Settings": "Sozlamalar"
+  },
+  "Topbar": {
+    "Search": "Qidirish...",
+    "SignOut": "Chiqish"
+  },
+  "Compose": {
+    "Title": "Xabar yaratish",
+    "TextTab": "Matn",
+    "MediaTab": "Media",
+    "PollTab": "So'rovnoma",
+    "VoiceTab": "Ovoz",
+    "MessagePlaceholder": "Xabaringizni bu yerga yozing... Telegram formatlashdan foydalaning (masalan, **qalin**, __qiyalik__)",
+    "HashtagsPlaceholder": "Heshteglar qo'shish (Enter tugmasini bosing)",
+    "SchedulePost": "Rejalashtirish",
+    "SendNow": "Hozir yuborish",
+    "Sending": "Yuborilmoqda...",
+    "SelectChannel": "Kanalni tanlang",
+    "NoChannels": "Kanallar topilmadi. Sozlamalarda qo'shing.",
+    "PollQuestion": "So'rovnoma savoli",
+    "PollOptions": "So'rovnoma variantlari",
+    "AddOption": "Variant qo'shish",
+    "AnonymousVoting": "Yashirin ovoz berish",
+    "MultipleAnswers": "Bir nechta javoblar",
+    "QuizMode": "Viktorina rejimi",
+    "VoiceText": "O'qiladigan matn",
+    "GenerateVoice": "Ovoz yaratish",
+    "SelectLanguage": "Tilni tanlang",
+    "MediaUploadLimit": "Har bir fayl uchun maksimal 50MB",
+    "UploadMedia": "Media yuklash"
+  },
+  "Dashboard": {
+    "TotalSubscribers": "Jami obunachilar",
+    "ActiveChannels": "Faol kanallar",
+    "PostsThisWeek": "Shu haftadagi xabarlar",
+    "RecentActivity": "So'nggi faollik",
+    "QuickActions": "Tezkor amallar",
+    "NewPost": "Yangi xabar",
+    "AddChannel": "Kanal qo'shish",
+    "ViewHistory": "Tarixni ko'rish",
+    "NoPostsYet": "Hozircha xabarlar yo'q. Yozishni boshlang!"
+  },
+  "Settings": {
+    "Title": "Sozlamalar",
+    "BotToken": "Bot Tokeni",
+    "BotTokenPlaceholder": "123456789:ABCdefGHIjklMNOpqrsTUVwxyz",
+    "Save": "Saqlash",
+    "Saving": "Saqlanmoqda..."
+  }
+}

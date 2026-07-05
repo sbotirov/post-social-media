@@ -14,6 +14,7 @@ import SchedulePicker from './SchedulePicker'
 import HashtagInput from './HashtagInput'
 import PostOptions_ from './PostOptions'
 import PostPreview from './PostPreview'
+import { useTranslations } from 'next-intl'
 
 export default function PostComposer() {
   const [channels, setChannels] = useState<ChannelInfo[]>([])
@@ -23,7 +24,7 @@ export default function PostComposer() {
   const [mediaFiles, setMediaFiles] = useState<MediaFileInput[]>([])
   const [ttsAudioPath, setTtsAudioPath] = useState<string | null>(null)
   const [ttsText, setTtsText] = useState('')
-  const [ttsLanguage, setTtsLanguage] = useState('en')
+  const [ttsLanguage, setTtsLanguage] = useState('uz-UZ') // Default to Uzbek as requested
   const [pollEnabled, setPollEnabled] = useState(false)
   const [poll, setPoll] = useState<PollInput>({ question: '', options: ['', ''], isAnonymous: true, type: 'regular', multiAnswer: false })
   const [keyboard, setKeyboard] = useState<InlineKeyboard>([])
@@ -33,6 +34,8 @@ export default function PostComposer() {
   const [scheduledAt, setScheduledAt] = useState('')
   const [isPending, startTransition] = useTransition()
   const [status, setStatus] = useState<{ type: 'success' | 'error'; message: string } | null>(null)
+
+  const t = useTranslations('Compose')
 
   useEffect(() => {
     getChannels().then((data) => setChannels(data as unknown as ChannelInfo[]))
@@ -126,10 +129,10 @@ export default function PostComposer() {
       <div className="lg:col-span-3 space-y-5">
         {/* Channel Selector */}
         <div className="glass rounded-2xl p-5">
-          <h3 className="text-sm font-semibold mb-3 flex items-center gap-2">📢 Select Channels</h3>
+          <h3 className="text-sm font-semibold mb-3 flex items-center gap-2">📢 {t('SelectChannel')}</h3>
           <div className="flex flex-wrap gap-2">
             {channels.length === 0 ? (
-              <p className="text-sm" style={{ color: 'hsl(215 15% 55%)' }}>No channels. Add channels first.</p>
+              <p className="text-sm" style={{ color: 'hsl(215 15% 55%)' }}>{t('NoChannels')}</p>
             ) : (
               <>
                 <button
@@ -185,7 +188,7 @@ export default function PostComposer() {
             className="flex-1 min-w-[140px] py-3 rounded-xl font-semibold text-white transition-all hover:scale-[1.02] active:scale-[0.98] disabled:opacity-50 glow-effect"
             style={{ background: 'linear-gradient(135deg, hsl(250 85% 65%), hsl(175 80% 50%))' }}
           >
-            {isPending ? '⏳ Sending...' : '📤 Send Now'}
+            {isPending ? '⏳ ' + t('Sending') : '📤 ' + t('SendNow')}
           </button>
           {scheduleMode === 'schedule' && (
             <button
@@ -194,7 +197,7 @@ export default function PostComposer() {
               className="flex-1 min-w-[140px] py-3 rounded-xl font-semibold transition-all hover:scale-[1.02] disabled:opacity-50"
               style={{ border: '1px solid hsl(250 85% 65%)', color: 'hsl(250 85% 65%)' }}
             >
-              ⏰ Schedule
+              ⏰ {t('SchedulePost')}
             </button>
           )}
           <button

@@ -2,6 +2,7 @@
 
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
+import { useTranslations } from 'next-intl'
 
 const navItems = [
   { href: '/dashboard', icon: '📊', label: 'Overview' },
@@ -19,6 +20,7 @@ interface SidebarProps {
 
 export default function Sidebar({ isOpen, onClose }: SidebarProps) {
   const pathname = usePathname()
+  const t = useTranslations('Sidebar')
 
   return (
     <aside
@@ -37,6 +39,14 @@ export default function Sidebar({ isOpen, onClose }: SidebarProps) {
       <nav className="flex-1 px-3 py-4 space-y-1">
         {navItems.map((item) => {
           const isActive = pathname === item.href || (item.href !== '/dashboard' && pathname.startsWith(item.href))
+          
+          let labelKey = 'Overview'
+          if (item.href.includes('/compose')) labelKey = 'Compose'
+          else if (item.href.includes('/channels')) labelKey = 'Channels'
+          else if (item.href.includes('/scheduled')) labelKey = 'Scheduled'
+          else if (item.href.includes('/history')) labelKey = 'History'
+          else if (item.href.includes('/settings')) labelKey = 'Settings'
+          
           return (
             <Link
               key={item.href}
@@ -58,7 +68,7 @@ export default function Sidebar({ isOpen, onClose }: SidebarProps) {
               }
             >
               <span className="text-lg">{item.icon}</span>
-              <span>{item.label}</span>
+              <span>{t(labelKey)}</span>
             </Link>
           )
         })}

@@ -3,20 +3,24 @@
 import { usePathname } from 'next/navigation'
 import { signOut } from 'next-auth/react'
 import { useState } from 'react'
-
-const pageTitles: Record<string, string> = {
-  '/dashboard': 'Overview',
-  '/dashboard/compose': 'Compose Post',
-  '/dashboard/channels': 'Channels',
-  '/dashboard/scheduled': 'Scheduled Posts',
-  '/dashboard/history': 'Post History',
-  '/dashboard/settings': 'Settings',
-}
+import LanguageSwitcher from './LanguageSwitcher'
+import { useTranslations } from 'next-intl'
 
 export default function Topbar({ onMenuClick }: { onMenuClick: () => void }) {
   const pathname = usePathname()
   const [showDropdown, setShowDropdown] = useState(false)
-  const title = pageTitles[pathname] || 'Dashboard'
+  const t = useTranslations('Topbar')
+  const tSidebar = useTranslations('Sidebar')
+  
+  // Try to match the pathname to a translation key
+  let titleKey = 'Overview'
+  if (pathname.includes('/compose')) titleKey = 'Compose'
+  else if (pathname.includes('/channels')) titleKey = 'Channels'
+  else if (pathname.includes('/scheduled')) titleKey = 'Scheduled'
+  else if (pathname.includes('/history')) titleKey = 'History'
+  else if (pathname.includes('/settings')) titleKey = 'Settings'
+  
+  const title = tSidebar(titleKey)
 
   return (
     <header className="h-16 flex items-center justify-between px-4 md:px-6 border-b relative z-50" style={{ background: 'hsl(224 25% 10% / 0.8)', backdropFilter: 'blur(12px)', borderColor: 'hsl(224 15% 20% / 0.5)' }}>
@@ -28,6 +32,7 @@ export default function Topbar({ onMenuClick }: { onMenuClick: () => void }) {
       </div>
 
       <div className="flex items-center gap-3">
+        <LanguageSwitcher />
         <button className="p-2 rounded-lg hover:bg-white/5 transition-colors relative">
           <span className="text-lg">🔔</span>
         </button>
@@ -55,7 +60,7 @@ export default function Topbar({ onMenuClick }: { onMenuClick: () => void }) {
                   className="w-full px-4 py-2 text-left text-sm hover:bg-white/5 transition-colors flex items-center gap-2"
                   style={{ color: 'hsl(0 72% 60%)' }}
                 >
-                  🚪 Sign Out
+                  🚪 {t('SignOut')}
                 </button>
               </div>
             </>
