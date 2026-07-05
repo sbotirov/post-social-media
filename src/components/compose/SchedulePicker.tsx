@@ -9,19 +9,22 @@ interface Props {
   onDateTimeChange: (dt: string) => void
 }
 
+import { useTranslations } from 'next-intl'
+
 export default function SchedulePicker({ mode, scheduledAt, onModeChange, onDateTimeChange }: Props) {
+  const t = useTranslations('Compose')
   const countdown = useMemo(() => {
     if (!scheduledAt) return null
     const diff = new Date(scheduledAt).getTime() - Date.now()
-    if (diff <= 0) return 'Time has passed'
+    if (diff <= 0) return t('TimePassed')
     const hours = Math.floor(diff / 3600000)
     const mins = Math.floor((diff % 3600000) / 60000)
-    return `Posts in ${hours}h ${mins}m`
-  }, [scheduledAt])
+    return t('PostsIn', { hours, mins })
+  }, [scheduledAt, t])
 
   return (
     <div className="glass rounded-2xl p-5">
-      <h3 className="text-sm font-semibold mb-3 flex items-center gap-2">⏰ Schedule</h3>
+      <h3 className="text-sm font-semibold mb-3 flex items-center gap-2">⏰ {t('ScheduleTitle')}</h3>
 
       <div className="flex gap-2 mb-4">
         {(['now', 'schedule'] as const).map((m) => (
@@ -35,7 +38,7 @@ export default function SchedulePicker({ mode, scheduledAt, onModeChange, onDate
               border: mode === m ? '1px solid hsl(250 85% 65% / 0.3)' : '1px solid transparent',
             }}
           >
-            {m === 'now' ? '⚡ Send Now' : '📅 Schedule'}
+            {m === 'now' ? `⚡ ${t('SendNow')}` : `📅 ${t('ScheduleTitle')}`}
           </button>
         ))}
       </div>

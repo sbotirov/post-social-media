@@ -8,20 +8,23 @@ interface Props {
 }
 
 const toggleItems = [
-  { key: 'disableComments' as const, icon: '💬', label: 'Disable Comments' },
-  { key: 'disableNotification' as const, icon: '🔕', label: 'Silent Notification' },
-  { key: 'protectContent' as const, icon: '🛡️', label: 'Protect Content' },
-  { key: 'pinMessage' as const, icon: '📌', label: 'Pin Message' },
+  { key: 'disableComments' as const, icon: '💬', labelKey: 'DisableComments' },
+  { key: 'disableNotification' as const, icon: '🔕', labelKey: 'SilentNotification' },
+  { key: 'protectContent' as const, icon: '🛡️', labelKey: 'ProtectContent' },
+  { key: 'pinMessage' as const, icon: '📌', labelKey: 'PinMessage' },
 ]
 
+import { useTranslations } from 'next-intl'
+
 export default function PostOptions_({ options, onOptionsChange }: Props) {
+  const t = useTranslations('Compose')
   function toggle(key: keyof PostOptions) {
     onOptionsChange({ ...options, [key]: !options[key] })
   }
 
   return (
     <div className="glass rounded-2xl p-5">
-      <h3 className="text-sm font-semibold mb-3 flex items-center gap-2">⚙️ Post Options</h3>
+      <h3 className="text-sm font-semibold mb-3 flex items-center gap-2">⚙️ {t('PostOptions')}</h3>
       <div className="grid grid-cols-2 gap-3">
         {toggleItems.map((item) => (
           <button
@@ -35,7 +38,7 @@ export default function PostOptions_({ options, onOptionsChange }: Props) {
             }}
           >
             <span>{item.icon}</span>
-            <span className="text-xs">{item.label}</span>
+            <span className="text-xs">{t(item.labelKey)}</span>
           </button>
         ))}
       </div>

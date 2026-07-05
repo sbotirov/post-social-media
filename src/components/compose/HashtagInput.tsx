@@ -7,7 +7,10 @@ interface Props {
   onHashtagsChange: (tags: string[]) => void
 }
 
+import { useTranslations } from 'next-intl'
+
 export default function HashtagInput({ hashtags, onHashtagsChange }: Props) {
+  const t = useTranslations('Compose')
   const [input, setInput] = useState('')
 
   function handleKeyDown(e: React.KeyboardEvent) {
@@ -31,14 +34,14 @@ export default function HashtagInput({ hashtags, onHashtagsChange }: Props) {
 
   return (
     <div className="glass rounded-2xl p-5">
-      <h3 className="text-sm font-semibold mb-3 flex items-center gap-2"># Hashtags</h3>
+      <h3 className="text-sm font-semibold mb-3 flex items-center gap-2"># {t('Hashtags')}</h3>
       <input
         className="form-input"
         value={input}
         onChange={(e) => setInput(e.target.value)}
         onKeyDown={handleKeyDown}
         onBlur={addTag}
-        placeholder="Type hashtag and press Enter"
+        placeholder={t('HashtagsPlaceholder')}
       />
       {hashtags.length > 0 && (
         <div className="flex flex-wrap gap-2 mt-3">

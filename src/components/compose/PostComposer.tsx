@@ -65,7 +65,7 @@ export default function PostComposer() {
 
   async function handleSubmit(action: 'send' | 'schedule' | 'draft') {
     if (selectedChannels.length === 0) {
-      setStatus({ type: 'error', message: 'Select at least one channel' })
+      setStatus({ type: 'error', message: t('SelectChannelErr') })
       return
     }
 
@@ -93,19 +93,19 @@ export default function PostComposer() {
         if (action === 'send') {
           const result = await sendPostNow(post.id)
           if (result.success) {
-            setStatus({ type: 'success', message: '✅ Post sent successfully!' })
+            setStatus({ type: 'success', message: t('PostSent') })
             resetForm()
           } else {
-            setStatus({ type: 'error', message: `Some channels failed: ${result.errors.map((e) => e.error).join(', ')}` })
+            setStatus({ type: 'error', message: `${t('SomeChannelsFailed')} ${result.errors.map((e) => e.error).join(', ')}` })
           }
         } else if (action === 'schedule') {
-          setStatus({ type: 'success', message: `⏰ Post scheduled for ${new Date(scheduledAt).toLocaleString()}` })
+          setStatus({ type: 'success', message: `${t('PostScheduledFor')} ${new Date(scheduledAt).toLocaleString()}` })
           resetForm()
         } else {
-          setStatus({ type: 'success', message: '💾 Draft saved' })
+          setStatus({ type: 'success', message: t('DraftSaved') })
         }
       } catch (e) {
-        setStatus({ type: 'error', message: e instanceof Error ? e.message : 'Failed' })
+        setStatus({ type: 'error', message: e instanceof Error ? e.message : t('Failed') })
       }
     })
   }
@@ -140,7 +140,7 @@ export default function PostComposer() {
                   className="text-xs px-3 py-1.5 rounded-lg transition-colors"
                   style={{ background: 'hsl(224 20% 14%)', color: 'hsl(215 15% 55%)' }}
                 >
-                  {selectedChannels.length === channels.length ? 'Deselect All' : 'Select All'}
+                  {selectedChannels.length === channels.length ? t('DeselectAll') : t('SelectAll')}
                 </button>
                 {channels.map((ch) => {
                   const selected = selectedChannels.includes(ch.id)
@@ -206,7 +206,7 @@ export default function PostComposer() {
             className="py-3 px-6 rounded-xl font-semibold transition-all hover:bg-white/5 disabled:opacity-50"
             style={{ color: 'hsl(215 15% 55%)' }}
           >
-            💾 Draft
+            💾 {t('Draft')}
           </button>
         </div>
       </div>
@@ -220,7 +220,7 @@ export default function PostComposer() {
             mediaFiles={mediaFiles}
             poll={pollEnabled ? poll : undefined}
             keyboard={keyboard}
-            channelName={channels.find((c) => selectedChannels.includes(c.id))?.title || 'Channel'}
+            channelName={channels.find((c) => selectedChannels.includes(c.id))?.title || t('Channel')}
             ttsAudioPath={ttsAudioPath}
           />
         </div>

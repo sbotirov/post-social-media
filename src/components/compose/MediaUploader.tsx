@@ -15,7 +15,10 @@ const typeConfig: { type: MediaType; label: string; icon: string; accept: string
   { type: 'DOCUMENT', label: 'Document', icon: '📄', accept: '*/*' },
 ]
 
+import { useTranslations } from 'next-intl'
+
 export default function MediaUploader({ files, onFilesChange }: Props) {
+  const t = useTranslations('Compose')
   const fileInputRef = useRef<HTMLInputElement>(null)
   const [activeType, setActiveType] = useState<MediaType>('PHOTO')
   const [dragOver, setDragOver] = useState(false)
@@ -71,7 +74,7 @@ export default function MediaUploader({ files, onFilesChange }: Props) {
 
   return (
     <div className="glass rounded-2xl p-5">
-      <h3 className="text-sm font-semibold mb-3 flex items-center gap-2">📎 Media</h3>
+      <h3 className="text-sm font-semibold mb-3 flex items-center gap-2">📎 {t('MediaTab')}</h3>
 
       {/* Type buttons */}
       <div className="flex gap-2 mb-3">
@@ -82,7 +85,7 @@ export default function MediaUploader({ files, onFilesChange }: Props) {
             className="px-3 py-1.5 rounded-lg text-xs flex items-center gap-1.5 transition-all hover:bg-white/10"
             style={{ background: 'hsl(224 20% 14%)', color: 'hsl(215 15% 55%)' }}
           >
-            {tc.icon} {tc.label}
+            {tc.icon} {t(tc.label)}
           </button>
         ))}
       </div>
@@ -100,7 +103,7 @@ export default function MediaUploader({ files, onFilesChange }: Props) {
         }}
       >
         <p className="text-sm" style={{ color: 'hsl(215 15% 55%)' }}>
-          {uploading ? '⏳ Uploading...' : '📁 Drop files here or click to browse'}
+          {uploading ? t('Uploading') : t('DropFiles')}
         </p>
       </div>
 

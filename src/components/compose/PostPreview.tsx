@@ -1,6 +1,7 @@
 'use client'
 
 import type { InlineKeyboard, PollInput, MediaFileInput } from '@/types'
+import { useTranslations } from 'next-intl'
 
 interface Props {
   text: string
@@ -13,12 +14,13 @@ interface Props {
 }
 
 export default function PostPreview({ text, mediaFiles, poll, keyboard, channelName, ttsAudioPath }: Props) {
+  const t = useTranslations('Compose')
   const now = new Date()
   const timeStr = `${now.getHours()}:${now.getMinutes().toString().padStart(2, '0')}`
 
   return (
     <div className="glass rounded-2xl p-5">
-      <h3 className="text-sm font-semibold mb-4 flex items-center gap-2">📱 Preview</h3>
+      <h3 className="text-sm font-semibold mb-4 flex items-center gap-2">📱 {t('Preview')}</h3>
 
       <div className="rounded-2xl overflow-hidden" style={{ background: 'hsl(224 20% 12%)' }}>
         {/* Channel header */}
@@ -49,7 +51,7 @@ export default function PostPreview({ text, mediaFiles, poll, keyboard, channelN
                   <div className="h-1 w-1/3 rounded-full" style={{ background: 'hsl(250 85% 65%)' }} />
                 </div>
               </div>
-              <span className="text-xs" style={{ color: 'hsl(215 15% 55%)' }}>TTS Audio</span>
+              <span className="text-xs" style={{ color: 'hsl(215 15% 55%)' }}>{t('TTSAudio')}</span>
             </div>
           )}
 
@@ -95,7 +97,7 @@ export default function PostPreview({ text, mediaFiles, poll, keyboard, channelN
       {/* Empty state */}
       {!text && mediaFiles.length === 0 && !poll && !ttsAudioPath && (
         <div className="text-center py-6" style={{ color: 'hsl(215 15% 40%)' }}>
-          <p className="text-sm">Start typing to see preview</p>
+          <p className="text-sm">{t('StartTypingPreview')}</p>
         </div>
       )}
     </div>

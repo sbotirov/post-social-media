@@ -19,7 +19,10 @@ const formatButtons = [
   { label: '👁', tag: 'tg-spoiler', title: 'Spoiler' },
 ]
 
+import { useTranslations } from 'next-intl'
+
 export default function TextEditor({ value, onChange, parseMode, onParseModeChange }: Props) {
+  const t = useTranslations('Compose')
   const textareaRef = useRef<HTMLTextAreaElement>(null)
 
   function wrapSelection(tag: string) {
@@ -53,7 +56,7 @@ export default function TextEditor({ value, onChange, parseMode, onParseModeChan
   return (
     <div className="glass rounded-2xl p-5">
       <div className="flex items-center justify-between mb-3">
-        <h3 className="text-sm font-semibold flex items-center gap-2">📝 Message</h3>
+        <h3 className="text-sm font-semibold flex items-center gap-2">📝 {t('Message')}</h3>
         <div className="flex gap-1 text-xs">
           {(['HTML', 'MarkdownV2'] as const).map((mode) => (
             <button
@@ -90,7 +93,7 @@ export default function TextEditor({ value, onChange, parseMode, onParseModeChan
         ref={textareaRef}
         value={value}
         onChange={(e) => onChange(e.target.value)}
-        placeholder="Write your message here..."
+        placeholder={t('MessagePlaceholder')}
         rows={6}
         className="form-input resize-y min-h-[150px]"
       />

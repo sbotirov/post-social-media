@@ -22,7 +22,10 @@ interface Props {
   onTtsLanguageChange: (lang: string) => void
 }
 
+import { useTranslations } from 'next-intl'
+
 export default function TtsGenerator({ onAudioGenerated, ttsText, onTtsTextChange, ttsLanguage, onTtsLanguageChange }: Props) {
+  const t = useTranslations('Compose')
   const [expanded, setExpanded] = useState(false)
   const [loading, setLoading] = useState(false)
   const [audioUrl, setAudioUrl] = useState<string | null>(null)
@@ -64,7 +67,7 @@ export default function TtsGenerator({ onAudioGenerated, ttsText, onTtsTextChang
         onClick={() => setExpanded(!expanded)}
         className="w-full p-5 flex items-center justify-between text-sm font-semibold hover:bg-white/5 transition-colors"
       >
-        <span className="flex items-center gap-2">🔊 Text-to-Speech</span>
+        <span className="flex items-center gap-2">🔊 {t('VoiceTab')}</span>
         <span className="text-lg transition-transform duration-200" style={{ transform: expanded ? 'rotate(180deg)' : '' }}>▾</span>
       </button>
 
@@ -73,7 +76,7 @@ export default function TtsGenerator({ onAudioGenerated, ttsText, onTtsTextChang
           <textarea
             value={ttsText}
             onChange={(e) => onTtsTextChange(e.target.value)}
-            placeholder="Enter text to convert to speech..."
+            placeholder={t('EnterTextForTTS')}
             rows={3}
             className="form-input resize-y min-h-[100px]"
           />
@@ -105,7 +108,7 @@ export default function TtsGenerator({ onAudioGenerated, ttsText, onTtsTextChang
               className="flex-1 py-2.5 rounded-xl text-sm font-medium transition-all hover:bg-white/10 disabled:opacity-50"
               style={{ border: '1px solid hsl(224 15% 20%)', color: 'hsl(215 15% 55%)' }}
             >
-              {loading ? '⏳ ...' : '🎧 Preview'}
+              {loading ? '⏳ ...' : t('PreviewBtn')}
             </button>
             <button
               onClick={() => handleGenerate(false)}
@@ -113,7 +116,7 @@ export default function TtsGenerator({ onAudioGenerated, ttsText, onTtsTextChang
               className="flex-1 py-2.5 rounded-xl text-sm font-medium text-white transition-all hover:scale-[1.02] disabled:opacity-50"
               style={{ background: 'hsl(250 85% 65%)' }}
             >
-              {loading ? '⏳ Generating...' : '✅ Generate & Attach'}
+              {loading ? `⏳ ${t('Uploading')}` : t('GenerateAndAttach')}
             </button>
           </div>
 
