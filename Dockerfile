@@ -11,7 +11,7 @@ COPY package.json package-lock.json* ./
 # We also need the prisma config and schema for postinstall scripts
 COPY prisma ./prisma/
 COPY prisma.config.ts ./
-RUN npm ci
+RUN npm install
 
 # Rebuild the source code only when needed
 FROM base AS builder

@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react'
 import { getPostHistory, deletePost } from '@/app/actions/posts'
 import { getChannels } from '@/app/actions/channels'
 import { format } from 'date-fns'
+import { useTranslations } from 'next-intl'
 
 const statusColors: Record<string, string> = {
   SENT: 'status-sent',
@@ -19,6 +20,7 @@ export default function HistoryPage() {
   const [total, setTotal] = useState(0)
   const [page, setPage] = useState(1)
   const [loading, setLoading] = useState(true)
+  const t = useTranslations('History')
   
   // Filters
   const [search, setSearch] = useState('')
@@ -52,7 +54,7 @@ export default function HistoryPage() {
   }
 
   async function handleDelete(id: string) {
-    if (!confirm('Are you sure you want to delete this post record?')) return
+    if (!confirm(t('ConfirmDelete'))) return
     await deletePost(id)
     loadPosts()
   }
@@ -61,8 +63,8 @@ export default function HistoryPage() {
     <div className="space-y-6 animate-fade-in">
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
-          <h2 className="text-xl font-bold">Post History</h2>
-          <p className="text-sm" style={{ color: 'hsl(215 15% 55%)' }}>View and manage past posts</p>
+          <h2 className="text-xl font-bold">{t('Title')}</h2>
+          <p className="text-sm" style={{ color: 'hsl(215 15% 55%)' }}>{t('Description')}</p>
         </div>
         
         {/* Filters */}
@@ -72,43 +74,43 @@ export default function HistoryPage() {
             <input
               value={search}
               onChange={(e) => setSearch(e.target.value)}
-              placeholder="Search text..."
+              placeholder={t('Search')}
               className="pl-8 py-1.5 text-sm w-40"
             />
           </div>
           
           <select value={channelId} onChange={(e) => setChannelId(e.target.value)} className="py-1.5 text-sm w-32">
-            <option value="">All Channels</option>
+            <option value="">{t('AllChannels')}</option>
             {channels.map((c) => (
               <option key={c.id} value={c.id}>{c.title}</option>
             ))}
           </select>
 
           <select value={status} onChange={(e) => setStatus(e.target.value)} className="py-1.5 text-sm w-28">
-            <option value="">All Status</option>
-            <option value="SENT">Sent</option>
-            <option value="FAILED">Failed</option>
-            <option value="DRAFT">Draft</option>
+            <option value="">{t('AllStatus')}</option>
+            <option value="SENT">{t('StatusSent')}</option>
+            <option value="FAILED">{t('StatusFailed')}</option>
+            <option value="DRAFT">{t('StatusDraft')}</option>
           </select>
         </div>
       </div>
 
       <div className="glass rounded-2xl overflow-hidden">
         {loading && posts.length === 0 ? (
-          <div className="p-12 text-center text-sm" style={{ color: 'hsl(215 15% 55%)' }}>Loading...</div>
+          <div className="p-12 text-center text-sm" style={{ color: 'hsl(215 15% 55%)' }}>{t('Loading')}</div>
         ) : posts.length === 0 ? (
-          <div className="p-12 text-center text-sm" style={{ color: 'hsl(215 15% 55%)' }}>No posts found</div>
+          <div className="p-12 text-center text-sm" style={{ color: 'hsl(215 15% 55%)' }}>{t('NoPosts')}</div>
         ) : (
           <div className="overflow-x-auto">
             <table className="w-full text-left text-sm whitespace-nowrap">
               <thead>
                 <tr style={{ background: 'hsl(224 20% 14%)', color: 'hsl(215 15% 55%)' }}>
-                  <th className="px-4 py-3 font-medium">Type</th>
-                  <th className="px-4 py-3 font-medium">Content</th>
-                  <th className="px-4 py-3 font-medium">Channels</th>
-                  <th className="px-4 py-3 font-medium">Status</th>
-                  <th className="px-4 py-3 font-medium">Date</th>
-                  <th className="px-4 py-3 font-medium text-right">Actions</th>
+                  <th className="px-4 py-3 font-medium">{t('ColType')}</th>
+                  <th className="px-4 py-3 font-medium">{t('ColContent')}</th>
+                  <th className="px-4 py-3 font-medium">{t('ColChannels')}</th>
+                  <th className="px-4 py-3 font-medium">{t('ColStatus')}</th>
+                  <th className="px-4 py-3 font-medium">{t('ColDate')}</th>
+                  <th className="px-4 py-3 font-medium text-right">{t('ColActions')}</th>
                 </tr>
               </thead>
               <tbody className="divide-y" style={{ borderColor: 'hsl(224 15% 20% / 0.5)' }}>
@@ -118,7 +120,7 @@ export default function HistoryPage() {
                       <span className="px-2 py-1 rounded bg-white/5 text-xs">{post.type}</span>
                     </td>
                     <td className="px-4 py-3 max-w-[200px] truncate">
-                      {post.text || 'Media/Poll post'}
+                      {post.text || t('MediaPost')}
                     </td>
                     <td className="px-4 py-3">
                       <div className="flex gap-1">
@@ -142,7 +144,7 @@ export default function HistoryPage() {
                     </td>
                     <td className="px-4 py-3 text-right">
                       <button onClick={() => handleDelete(post.id)} className="text-xs hover:opacity-70" style={{ color: 'hsl(0 72% 60%)' }}>
-                        Delete
+                        {t('Delete')}
                       </button>
                     </td>
                   </tr>
@@ -160,15 +162,15 @@ export default function HistoryPage() {
               disabled={page === 1}
               className="px-3 py-1.5 rounded-lg text-sm disabled:opacity-50 hover:bg-white/5"
             >
-              Previous
+              {t('Previous')}
             </button>
-            <span className="text-sm" style={{ color: 'hsl(215 15% 55%)' }}>Page {page} of {total}</span>
+            <span className="text-sm" style={{ color: 'hsl(215 15% 55%)' }}>{t('PageInfo', { page, total })}</span>
             <button
               onClick={() => setPage(p => Math.min(total, p + 1))}
               disabled={page === total}
               className="px-3 py-1.5 rounded-lg text-sm disabled:opacity-50 hover:bg-white/5"
             >
-              Next
+              {t('Next')}
             </button>
           </div>
         )}

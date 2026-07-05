@@ -3,6 +3,7 @@
 import { useState, useEffect, useTransition } from 'react'
 import { getAllChannels, addChannel, removeChannel, toggleChannel } from '@/app/actions/channels'
 import type { ChannelInfo } from '@/types'
+import { useTranslations } from 'next-intl'
 
 export default function ChannelsPage() {
   const [channels, setChannels] = useState<ChannelInfo[]>([])
@@ -10,6 +11,7 @@ export default function ChannelsPage() {
   const [chatId, setChatId] = useState('')
   const [isPending, startTransition] = useTransition()
   const [error, setError] = useState('')
+  const t = useTranslations('Channels')
 
   useEffect(() => {
     loadChannels()
@@ -30,13 +32,13 @@ export default function ChannelsPage() {
         setShowAddForm(false)
         await loadChannels()
       } catch (e) {
-        setError(e instanceof Error ? e.message : 'Failed to add channel')
+        setError(e instanceof Error ? e.message : t('FailedToAdd'))
       }
     })
   }
 
   function handleRemove(id: string, title: string) {
-    if (!confirm(`Remove "${title}"?`)) return
+    if (!confirm(t('ConfirmRemove', { title }))) return
     startTransition(async () => {
       await removeChannel(id)
       await loadChannels()
@@ -55,27 +57,27 @@ export default function ChannelsPage() {
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h2 className="text-xl font-bold">Channels</h2>
-          <p className="text-sm" style={{ color: 'hsl(215 15% 55%)' }}>Manage your Telegram channels</p>
+          <h2 className="text-xl font-bold">{t('Title')}</h2>
+          <p className="text-sm" style={{ color: 'hsl(215 15% 55%)' }}>{t('Description')}</p>
         </div>
         <button
           onClick={() => setShowAddForm(!showAddForm)}
           className="px-4 py-2.5 rounded-xl font-medium text-sm text-white hover:scale-105 transition-transform glow-effect"
           style={{ background: 'linear-gradient(135deg, hsl(250 85% 65%), hsl(175 80% 50%))' }}
         >
-          + Add Channel
+          {t('AddChannelBtn')}
         </button>
       </div>
 
       {/* Add Channel Form */}
       {showAddForm && (
         <div className="glass rounded-2xl p-5 animate-fade-in">
-          <h3 className="text-sm font-semibold mb-3">Add Channel</h3>
+          <h3 className="text-sm font-semibold mb-3">{t('AddChannel')}</h3>
           <div className="flex gap-3">
             <input
               value={chatId}
               onChange={(e) => setChatId(e.target.value)}
-              placeholder="@channelname or -100xxxxxxxxx"
+              placeholder={t('Placeholder')}
               className="flex-1"
             />
             <button
@@ -84,7 +86,7 @@ export default function ChannelsPage() {
               className="px-5 py-2.5 rounded-xl text-sm font-medium text-white disabled:opacity-50"
               style={{ background: 'hsl(250 85% 65%)' }}
             >
-              {isPending ? '...' : 'Add'}
+              {isPending ? '...' : t('Add')}
             </button>
           </div>
           {error && <p className="text-sm mt-2" style={{ color: 'hsl(0 72% 60%)' }}>⚠️ {error}</p>}
@@ -95,8 +97,8 @@ export default function ChannelsPage() {
       {channels.length === 0 ? (
         <div className="glass rounded-2xl p-12 text-center">
           <div className="text-5xl mb-4">📢</div>
-          <h3 className="text-lg font-semibold mb-2">No channels yet</h3>
-          <p className="text-sm" style={{ color: 'hsl(215 15% 55%)' }}>Add your first Telegram channel to get started</p>
+          <h3 className="text-lg font-semibold mb-2">{t('NoChannels')}</h3>
+          <p className="text-sm" style={{ color: 'hsl(215 15% 55%)' }}>{t('NoChannelsDesc')}</p>
         </div>
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
@@ -126,7 +128,7 @@ export default function ChannelsPage() {
               <div className="mt-4 flex items-center justify-between">
                 {channel.memberCount && (
                   <span className="text-xs" style={{ color: 'hsl(215 15% 55%)' }}>
-                    👥 {channel.memberCount.toLocaleString()} members
+                    👥 {channel.memberCount.toLocaleString()} {t('Members')}
                   </span>
                 )}
                 <button

@@ -3,10 +3,12 @@
 import { useState, useEffect, useTransition } from 'react'
 import { getScheduledPosts, cancelScheduledPost } from '@/app/actions/posts'
 import { format } from 'date-fns'
+import { useTranslations } from 'next-intl'
 
 export default function ScheduledPage() {
   const [posts, setPosts] = useState<any[]>([])
   const [isPending, startTransition] = useTransition()
+  const t = useTranslations('Scheduled')
 
   useEffect(() => {
     loadPosts()
@@ -18,7 +20,7 @@ export default function ScheduledPage() {
   }
 
   function handleCancel(postId: string) {
-    if (!confirm('Cancel this scheduled post? It will be saved as a draft.')) return
+    if (!confirm(t('ConfirmCancel'))) return
     startTransition(async () => {
       await cancelScheduledPost(postId)
       await loadPosts()
@@ -29,8 +31,8 @@ export default function ScheduledPage() {
     <div className="space-y-6 animate-fade-in">
       <div className="flex items-center justify-between">
         <div>
-          <h2 className="text-xl font-bold">Scheduled Posts</h2>
-          <p className="text-sm" style={{ color: 'hsl(215 15% 55%)' }}>Manage your upcoming content</p>
+          <h2 className="text-xl font-bold">{t('Title')}</h2>
+          <p className="text-sm" style={{ color: 'hsl(215 15% 55%)' }}>{t('Description')}</p>
         </div>
         <button onClick={() => loadPosts()} className="p-2 rounded-lg hover:bg-white/5">🔄</button>
       </div>
@@ -38,8 +40,8 @@ export default function ScheduledPage() {
       {posts.length === 0 ? (
         <div className="glass rounded-2xl p-12 text-center">
           <div className="text-5xl mb-4">⏰</div>
-          <h3 className="text-lg font-semibold mb-2">No scheduled posts</h3>
-          <p className="text-sm" style={{ color: 'hsl(215 15% 55%)' }}>Your upcoming scheduled posts will appear here</p>
+          <h3 className="text-lg font-semibold mb-2">{t('NoPosts')}</h3>
+          <p className="text-sm" style={{ color: 'hsl(215 15% 55%)' }}>{t('NoPostsDesc')}</p>
         </div>
       ) : (
         <div className="space-y-4 relative before:absolute before:inset-0 before:ml-5 before:-translate-x-px md:before:mx-auto md:before:translate-x-0 before:h-full before:w-0.5 before:bg-gradient-to-b before:from-transparent before:via-[hsl(224_15%_20%)] before:to-transparent">
@@ -57,7 +59,7 @@ export default function ScheduledPage() {
                   <span className="text-xs px-2 py-0.5 rounded bg-white/5">{post.type}</span>
                 </div>
                 
-                <p className="text-sm mb-3 line-clamp-2">{post.text || 'Media post'}</p>
+                <p className="text-sm mb-3 line-clamp-2">{post.text || t('MediaPost')}</p>
                 
                 <div className="flex items-center justify-between">
                   <div className="flex gap-1 overflow-x-auto no-scrollbar">
@@ -74,7 +76,7 @@ export default function ScheduledPage() {
                     className="text-xs px-3 py-1.5 rounded-lg ml-2 shrink-0 transition-colors hover:bg-white/10"
                     style={{ color: 'hsl(0 72% 60%)', border: '1px solid hsl(0 72% 60% / 0.3)' }}
                   >
-                    Cancel
+                    {t('Cancel')}
                   </button>
                 </div>
               </div>
